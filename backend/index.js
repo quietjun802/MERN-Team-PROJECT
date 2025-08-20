@@ -25,8 +25,6 @@ const todoRoutes = require('./routes/todoRoutes')
 app.use('/api/todos',todoRoutes)
 
 
-
-
 app.get('/',(req, res)=>{
     res.send("Hello Express")
 })
