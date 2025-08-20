@@ -1,13 +1,24 @@
+.edit-wrap,
+.content-wrap {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
 .TodoItem{
     display: flex;
     gap: 20px;
     padding: 10px 0; 
     border-bottom: 1px solid #eee;
-    /* justify-content: space-between; */
 }
 
 .TodoItem.isCompleted{
 background-color: #f1f1f1;
+}
+
+.edit-wrap input {
+    flex: 1;
+    border: 1px solid #eee;
+    border-radius: 5px;
 }
 
 .TodoItem .content{
@@ -32,11 +43,11 @@ background-color: #f1f1f1;
     color: #fff;
 }
 
-.updatebtn {
+.updateBtn {
     background-color: rgb(80, 223, 180);
 }
 
-.deletebtn {
+.deleteBtn {
     background-color: rgb(255, 121, 112);
 }
 
