@@ -9,16 +9,13 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-<<<<<<< HEAD
-   <div></div>
-=======
+
     <>
       <Header />
       <Input />
       <Item />
       <List />
     </>
->>>>>>> chodaniel_1
   )
 }
 
