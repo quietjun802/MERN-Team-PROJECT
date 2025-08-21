@@ -1,25 +1,28 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
-const cors = require("cors")
 
-dotenv.config()
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const morgan = require('morgan');
+require('dotenv').config();
 
-const app = express()
-const PORT = process.env.PORT || 3000
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-mongoose
-    .connect(process.env.MONGO_DB)
-    .then(() => console.log("MongoDB 연결 성공"))
-    .catch((err) => console.log("연결 실패", err))
+app.use(express.json());
+app.use(cors({ origin: process.env.FRONT_ORIGIN || 'http://localhost:5173', credentials: true }));
+app.use(morgan('dev'));
 
-const bucketRoutes = require("./routes/bucketRoutes")
-app.use("/api/buckets", bucketRoutes)
+app.use((req,res,next)=>{ console.log('[REQ]', req.method, req.url); next(); });
 
-app.get("/", (req, res) => {
-    res.send("Hello Express")
-})
+const bucketRoutes = require('./routes/bucketRoutes');
+app.use('/api/buckets', bucketRoutes);
 
-app.listen(PORT, () => {
-    console.log("Server is Running!")
-})
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB 연결 성공'))
+  .catch(err => console.error('MongoDB 연결 실패:', err.message));
+
+app.get('/', (_req, res) => res.send('Hello Express'));
+
+app.listen(PORT, () => console.log(`Server is Running on ${PORT}`));

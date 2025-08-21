@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev":"nodemon index.js"
+=======
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+>>>>>>> origin/chodaniel_1
   },
   "keywords": [],
   "author": "",
@@ -15,6 +20,15 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongoose": "^8.17.2",
+<<<<<<< HEAD
     "nodemon": "^3.1.10"
   }
 }
+=======
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
+>>>>>>> origin/chodaniel_1
