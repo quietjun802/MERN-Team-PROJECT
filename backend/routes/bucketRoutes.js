@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Bucket = require('../models/Bucket');
 const router = express.Router();
 
@@ -11,23 +12,24 @@ router.get('/', async (_req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
-    try {
-        const { id } = req.params
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
 
-
-        if (!ensureObjectId(id, res)) return
-
-        const Bucket = await Bucket.findById(id)
-        if (!Bucket) {
-            return res.status(404).json({ message: '해당 Id의 todo가 없습니다.' })
-        }
-
-        res.status(201).json({ message: "1개 불러오기 성공", Bucket })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: '유효하지 않은 ID 형식입니다.' });
     }
-})
+
+    const bucket = await Bucket.findById(id);
+    if (!bucket) {
+      return res.status(404).json({ message: '해당 ID의 bucket 없습니다.' });
+    }
+
+    return res.status(200).json({ message: '1개 불러오기 성공', bucket });
+  } catch (error) {
+    return res.status(500).json({ message: '데이터를 불러오지 못했습니다.', error: error.message });
+  }
+});
 
 
 router.post('/', async (req, res) => {
@@ -57,13 +59,28 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    try {
-        const deleted = await Bucket.findByIdAndDelete(req.params.id);
-        if (!deleted) return res.status(404).json({ message: 'Not Found' });
-        res.json(deleted);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: '유효하지 않은 ID 형식입니다.' });
     }
+
+    const deleted = await Bucket.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
+    }
+
+    const remaining = await Bucket.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: '1개 삭제하기 성공',
+      deleted: deleted._id,
+      buckets: remaining
+    });
+  } catch (error) {
+    return res.status(500).json({ message: '데이터를 삭제하지 못했습니다.', error: error.message });
+  }
 });
 
 module.exports = router;
