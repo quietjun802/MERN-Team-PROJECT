@@ -1,8 +1,7 @@
 const express = require('express');
-const Bucket = require('../models/Bucket');   // DB 모델 불러오기
+const Bucket = require('../models/Bucket');
 const router = express.Router();
 
-// 전체 조회
 router.get('/', async (_req, res) => {
     try {
         const buckets = await Bucket.find().sort({ createdAt: -1 });
@@ -12,7 +11,6 @@ router.get('/', async (_req, res) => {
     }
 });
 
-// 생성
 router.post('/', async (req, res) => {
     try {
         const { title, done } = req.body;
@@ -24,7 +22,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// 수정
 router.put('/:id', async (req, res) => {
     try {
         const { title, done } = req.body;
@@ -40,7 +37,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// 삭제
 router.delete('/:id', async (req, res) => {
     try {
         const deleted = await Bucket.findByIdAndDelete(req.params.id);
