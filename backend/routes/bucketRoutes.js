@@ -11,6 +11,25 @@ router.get('/', async (_req, res) => {
     }
 });
 
+router.get("/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+
+
+        if (!ensureObjectId(id, res)) return
+
+        const Bucket = await Bucket.findById(id)
+        if (!Bucket) {
+            return res.status(404).json({ message: '해당 Id의 todo가 없습니다.' })
+        }
+
+        res.status(201).json({ message: "1개 불러오기 성공", Bucket })
+    } catch (error) {
+        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
+    }
+})
+
+
 router.post('/', async (req, res) => {
     try {
         const { title, done } = req.body;
