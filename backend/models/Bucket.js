@@ -1,11 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
 const bucketSchema = new mongoose.Schema(
     {
-        title: { type: String, required: true, trim: true },
-        done: { type: Boolean, default: false },
+        text:{
+            type:String,
+            required:true,
+            trim:true
+        },
+        isCompleted:{
+            type:Boolean,
+            default:false
+        },
+        date:{
+            type:Date,
+            default:Date.now
+        }
     },
-    { timestamps: true, collection: 'todos' } 
-);
+    {timestamps:true}
+)
 
-module.exports = mongoose.model('Bucket', bucketSchema);
+const Bucket = mongoose.model("Bucket",bucketSchema)
+
+module.exports = Bucket
