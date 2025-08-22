@@ -1,18 +1,39 @@
-.BucketEditor{
-    display: flex;
-    gap: 10px;
+.BucketEditor {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
-.BucketEditor input{
-    flex: 1;
-    padding: 15px;
-    border:1px solid #eee;
-    border-radius: 5px;
+
+.BucketEditor .input-group {
+  display: flex;
+  border: 1px solid black;
+  border-radius: 12px;
+  overflow: hidden;
 }
-.BucketEditor button{
-    border:1px solid #eee;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-    width: 80px;
-    background-color: rgb(37, 147, 255);
+
+.BucketEditor input {
+  flex: 1;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  outline: none;
+}
+
+.BucketEditor button {
+  background-color: skyblue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.BucketEditor button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.BucketEditor button:hover:not(:disabled) {
+  background-color: #555;
 }
