@@ -1,57 +1,47 @@
 .edit-wrap,
 .content-wrap {
-    display: flex;
-    width: 100%;
-    gap: 20px;
-}
-.Item{
-    display: flex;
-    gap: 20px;
-    padding: 10px 0; 
-    border-bottom: 1px solid #eee;
+  display: flex;
+  width: 100%;
+  gap: 20px;
 }
 
-.Item.isCompleted{
-background-color: #f1f1f1;
+/* 카드 행 */
+.BucketItem{
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.edit-wrap input {
-    flex: 1;
-    border: 1px solid #eee;
-    border-radius: 5px;
+/* 완료 표시 */
+.BucketItem.isCompleted{
+  background-color: #f1f1f1;
+}
+.BucketItem.isCompleted .content{
+  text-decoration: line-through;
+  color: gray;
 }
 
-.Item .content{
-    flex:1;
+/* 편집 인풋 */
+.edit-wrap input{
+  flex: 1;
+  border: 1px solid #eee;
+  border-radius: 5px;
 }
 
-.Item .date {
-    font-size: 14px;
-    color: gray;
-}
-.btn-wrap{
-    display: flex;
-    gap: 10px;
-}
+/* 본문/날짜/버튼 */
+.BucketItem .content{ flex: 1; }
+.BucketItem .date{ font-size: 14px; color: gray; }
 
-.Item button{
-    cursor: pointer;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    padding: 5px;
-    color: #fff;
-}
+.btn-wrap{ display: flex; gap: 10px; }
 
-.updateBtn {
-    background-color: rgb(80, 223, 180);
+.BucketItem button{
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: #fff;
 }
-
-.deleteBtn {
-    background-color: rgb(255, 121, 112);
-}
-
-.Item.isCompleted .content{
-    text-decoration: line-through;
-    color: gray;
-}
+.updateBtn{ background-color: rgb(80, 223, 180); }
+.deleteBtn{ background-color: rgb(255, 121, 112); }
