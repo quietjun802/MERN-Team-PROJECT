@@ -60,10 +60,9 @@ const Item = ({ bucket, onDelete, onUpdateChecked, onUpdateBucket }) => {
       <input
         type="checkbox"
         checked={checked}
-        // 부모에서 id 바인딩된 콜백을 내려줬다고 가정 → next만 넘김
-        onChange={(e) => onUpdateChecked(e.target.checked)}
-        readOnly
+        onChange={(e) => onUpdateChecked(e.target.checked)}   // ✅ readOnly 제거
       />
+
 
       {editing ? (
         <div className="edit-wrap">
