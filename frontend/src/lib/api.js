@@ -5,7 +5,6 @@ export const api = axios.create({
   withCredentials: true,                 // 쿠키 포함
 });
 
-// 401이면 게스트 로그인 시도 후 재시도 (옵션: 깔끔함)
 let isAuthing = false;
 api.interceptors.response.use(
   r => r,
