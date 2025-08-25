@@ -1,0 +1,47 @@
+.BucketItem {
+    display: flex;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    /* justify-content: space-between; */
+}
+
+.BucketItem.isCompleted {
+    background-color: #f1f1f1;
+}
+
+.BucketItem .content {
+    flex: 1;
+}
+
+.BucketItem .date {
+    font-size: 14px;
+    color: gray;
+}
+
+.btn-wrap {
+    display: flex;
+    gap: 10px;
+}
+
+.BucketItem button {
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: #fff;
+}
+
+.updateBtn {
+    background-color: rgb(80, 223, 180);
+}
+
+.deleteBtn {
+    background-color: rgb(255, 121, 112);
+}
+
+.BucketItem.isCompleted .content {
+    text-decoration: line-through;
+    color: gray;
+}

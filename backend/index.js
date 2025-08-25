@@ -14,7 +14,7 @@ app.use(morgan('dev'));
 
 app.use((req, res, next) => { console.log('[REQ]', req.method, req.url); next(); });
 
-const bucketRoutes = require('./routes/bucketRoutes');
+const bucketRoutes = require('./routes/bucketroutes');
 app.use('/api/buckets', bucketRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));

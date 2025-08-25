@@ -1,6 +1,6 @@
 
 const express = require('express');
-const Bucket = require('../models/Bucket');
+const Bucket = require('../models/bucket');
 const router = express.Router();
 
 router.get('/', async (_req, res) => {
