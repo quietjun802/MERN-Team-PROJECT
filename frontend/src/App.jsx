@@ -7,7 +7,7 @@ import List from './components/List'
 function App() {
 
   const [buckets, setBuckets] = useState([])
-  const API = 'api/buckets'
+  const API = '/api/buckets'
 
   useEffect(() => {
     const fetchBuckets = async () => {
