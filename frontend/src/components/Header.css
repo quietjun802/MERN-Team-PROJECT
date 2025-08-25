@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .Header{
   font-weight: 1000;
   font-size: 25px;
@@ -7,4 +8,12 @@
   width: 200px;
   text-align: center;
   -webkit-text-stroke: 0.3px black;
+=======
+.app-header h1 {
+    color: rgb(37, 147, 255);
+}
+
+.app-header h3 {
+    margin-top: 4px;
+>>>>>>> choyongjun
 }

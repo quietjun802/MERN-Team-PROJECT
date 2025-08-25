@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .App {
     width: 500px;
     height: auto;
@@ -8,4 +9,12 @@
     border: 1px solid black;
     border-radius: 10px;
     padding: 15px;
+=======
+.App{
+  width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+>>>>>>> choyongjun
 }
