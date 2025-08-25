@@ -1,141 +1,136 @@
-const express = require("express")
-const router = express.Router()
-const mongoose = require("mongoose")
-const Bucket = require("../models/Bucket")
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const Bucket = require('../models/Bucket');
 
 const ensureObjectId = (id, res) => {
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({ message: '유효하지 않은 ID형식입니다.' })
-        return false
+  if (!mongoose.isValidObjectId(id)) {
+    res.status(400).json({ message: '유효하지 않은 ID 형식입니다.' });
+    return false;
+  }
+  return true;
+};
+
+// 생성
+router.post('/', async (req, res) => {
+  try {
+    const { text, checked } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ message: 'text는 필수입니다.' });
     }
-    return true
-}
+    const doc = await Bucket.create({ text: text.trim(), checked: !!checked });
+    return res.status(201).json(doc);
+  } catch (error) {
+    return res.status(400).json({ message: '할 일을 저장하지 못했습니다.', detail: error.message });
+  }
+});
 
-router.post("/", async (req, res) => {
-    try {
-        const newBucket = new Bucket(req.body)
-        const saveBucket = await newBucket.save()
+// 목록
+router.get('/', async (_req, res) => {
+  try {
+    const buckets = await Bucket.find().sort({ createdAt: -1 }).lean();
+    return res.status(200).json(buckets);
+  } catch (error) {
+    return res.status(500).json({ message: '데이터를 불러오지 못했습니다.', detail: error.message });
+  }
+});
 
-        res.status(201).json(saveBucket)
-    } catch (error) {
-        res.status(400).json({ error: "할일을 저장하지 못했습니다." })
+// 단건 조회
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ensureObjectId(id, res)) return;
+
+    const bucket = await Bucket.findById(id).lean();
+    if (!bucket) return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
+
+    return res.status(200).json(bucket);
+  } catch (error) {
+    return res.status(500).json({ message: '데이터를 불러오지 못했습니다.', detail: error.message });
+  }
+});
+
+// 전체 수정(예: text/checked 둘 다 가능)
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ensureObjectId(id, res)) return;
+
+    const updated = await Bucket.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true, runValidators: true, context: 'query' }
+    );
+    if (!updated) return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
+
+    return res.status(200).json(updated);
+  } catch (error) {
+    return res.status(400).json({ message: '데이터를 수정하지 못했습니다.', detail: error.message });
+  }
+});
+
+// 삭제
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ensureObjectId(id, res)) return;
+
+    const deleted = await Bucket.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
+
+    const buckets = await Bucket.find().sort({ createdAt: -1 }).lean();
+    return res.status(200).json({ message: '삭제 성공', deleted: deleted._id, buckets });
+  } catch (error) {
+    return res.status(500).json({ message: '데이터를 삭제하지 못했습니다.', detail: error.message });
+  }
+});
+
+// 체크 상태만 토글(모델 필드가 checked라고 가정)
+router.patch('/:id/check', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ensureObjectId(id, res)) return;
+    const { checked } = req.body;
+
+    if (typeof checked !== 'boolean') {
+      return res.status(400).json({ message: 'checked는 반드시 boolean이어야 합니다.' });
     }
-})
-router.get("/", async (req, res) => {
-    try {
 
-        const bucket = await Bucket.find().sort({ createdAt: -1 })
+    const updated = await Bucket.findByIdAndUpdate(
+      id,
+      { checked },
+      { new: true, runValidators: true, context: 'query' }
+    );
+    if (!updated) return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
 
-        res.status(201).json(buckets)
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
+    return res.status(200).json(updated);
+  } catch (error) {
+    return res.status(400).json({ message: '체크 상태 수정 실패', detail: error.message });
+  }
+});
+
+// 텍스트만 수정
+router.patch('/:id/text', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ensureObjectId(id, res)) return;
+    const { text } = req.body;
+
+    if (!text || !text.trim()) {
+      return res.status(400).json({ message: 'text는 필수입니다.' });
     }
-})
-router.get("/:id", async (req, res) => {
-    try {
-        const { id } = req.params
 
+    const updated = await Bucket.findByIdAndUpdate(
+      id,
+      { text: text.trim() },
+      { new: true, runValidators: true, context: 'query' }
+    );
+    if (!updated) return res.status(404).json({ message: '해당 ID의 bucket이 없습니다.' });
 
-        if (!ensureObjectId(id, res)) return
+    return res.status(200).json(updated);
+  } catch (error) {
+    return res.status(400).json({ message: '텍스트 수정 실패', detail: error.message });
+  }
+});
 
-        const bucket = await Bucket.findById(id)
-        if (!bucket) {
-            return res.status(404).json({ message: '해당 Id의 bucket가 없습니다.' })
-        }
-
-        res.status(201).json({ message: "1개 불러오기 성공", bucket })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
-    }
-})
-router.put("/:id", async (req, res) => {
-    try {
-        const { id } = req.params
-        const updateData = req.body
-
-        if (!ensureObjectId(id, res)) return
-        const updated = await bucket.findByIdAndUpdate(id, updateData, {
-            new: true,
-            runValidators: true
-        })
-        if (!updated) {
-            return res.status(404).json({ message: '해당 Id의 bucket가 없습니다.' })
-        }
-
-        res.status(201).json({ message: "1개 수정하기 성공", updated })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
-    }
-})
-router.delete("/:id", async (req, res) => {
-    try {
-        const { id } = req.params
-
-
-        if (!ensureObjectId(id, res)) return
-
-        const deleted = await Bucket.findByIdAndDelete(id)
-        if (!deleted) {
-            return res.status(404).json({ message: '해당 Id의 bucket가 없습니다.' })
-        }
-
-
-        const remaining = await Bucket.find().sort({ createdAt: -1 })
-
-        res.status(201).json({
-            message: "1개 삭제하기 성공",
-            deleted: deleted._id,
-            buckets: remaining
-        })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
-    }
-})
-router.patch("/:id/check", async (req, res) => {
-    try {
-        const { id } = req.params
-        if (!ensureObjectId(id, res)) return
-        const {isCompleted} = req.body
-
-        if(typeof isCompleted !=='boolean'){
-            return res.status(400).json({message:"isCompleted는 반드시 boolean이어야 합니다."})
-        }
-
-        const updated = await Bucket.findByIdAndUpdate(id,
-            {isCompleted},
-            {new:true,runValidators:true,context:'query'}
-        )
-        if (!updated) {
-            return res.status(404).json({ message: '해당 Id의 bucket가 없습니다.' })
-        }
-
-        res.status(201).json({ message: "체크상태 수정하기 성공",bucket: updated })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
-    }
-})
-router.patch("/:id/text", async (req, res) => {
-    try {
-        const { id } = req.params
-        if (!ensureObjectId(id, res)) return
-        const {text} = req.body
-
-        if(!text || !text.trim()){
-            return res.status(400).json({message:"text는 필수입니다."})
-        }
-
-        const updated = await Bucket.findByIdAndUpdate(id,
-            {text:text.trim()},
-            {new:true,runValidators:true,context:'query'}
-        )
-        if (!updated) {
-            return res.status(404).json({ message: '해당 Id의 bucket가 없습니다.' })
-        }
-
-        res.status(201).json({ message: "텍스트 수정하기 성공",bucket: updated })
-    } catch (error) {
-        res.status(400).json({ error: "데이터를 불러오지 못했습니다." })
-    }
-})
-
-module.exports = router
+module.exports = router;
