@@ -11,22 +11,22 @@ function App() {
   const API = '/api/buckets';
 
   useEffect(() => {
-  (async () => {
-    try {
-      await ensureGuestAuth();
-    } catch (e) {
-      console.warn('guest auth failed', e?.response?.status);
-    }
+    (async () => {
+      try {
+        await ensureGuestAuth();
+      } catch (e) {
+        console.warn('guest auth failed', e?.response?.status);
+      }
 
-    try {
-      const res = await api.get(API);
-      const data = Array.isArray(res.data) ? res.data : (res.data?.buckets ?? []);
-      setBuckets(data);
-    } catch (err) {
-      console.error('목록 불러오기 실패', err);
-    }
-  })();
-}, []);
+      try {
+        const res = await api.get(API);
+        const data = Array.isArray(res.data) ? res.data : (res.data?.buckets ?? []);
+        setBuckets(data);
+      } catch (err) {
+        console.error('목록 불러오기 실패', err);
+      }
+    })();
+  }, []);
 
 
   const onCreate = async (bucketText) => {

@@ -23,9 +23,9 @@ const List = ({ buckets, onDelete, onUpdateChecked, onUpdateBucket }) => {
       <div className="buckets-wrapper">
         {filtered.map((bucket) => (
           <Item
-            key={bucket._id}                              // ✅ 고유키 사용
+            key={bucket._id} 
             bucket={bucket}
-            onDelete={() => onDelete(bucket._id)}         // ✅ id 바인딩
+            onDelete={() => onDelete(bucket._id)}
             onUpdateChecked={(next) => onUpdateChecked(bucket._id, next)}
             onUpdateBucket={(next) => onUpdateBucket(bucket._id, next)}
           />
