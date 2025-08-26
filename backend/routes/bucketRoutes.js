@@ -13,19 +13,13 @@ const ensureObjectId = (id, res) => {
 };
 
 // 1) 생성
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const text = req.body?.text?.trim();
-    const checked = !!req.body?.checked;
-    if (!text) return res.status(400).json({ message: 'text는 필수입니다.' });
-
-    const doc = await Bucket.create({ text, checked });
-    // 프런트가 단건/배열 모두 처리하므로 단건 반환 유지
-    return res.status(201).json(doc);
-  } catch (error) {
-    return res
-      .status(400)
-      .json({ message: '할 일을 저장하지 못했습니다.', detail: error.message });
+    const bucket = new Bucket(req.body);
+    const saved = await bucket.save();
+    res.json(saved);
+  } catch (err) {
+    res.status(500).json({ error: "저장 실패" });
   }
 });
 
