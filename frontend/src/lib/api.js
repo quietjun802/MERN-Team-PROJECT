@@ -5,9 +5,9 @@ export const getBuckets  = () => api.get("/buckets");
 export const addBucket   = (text) => api.post("/buckets", { text });
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // http://localhost:3000/api
-  withCredentials: true,                 // 쿠키(guest 토큰) 주고받기
-});
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
+})
 
 await api.post("/auth/guest");
 

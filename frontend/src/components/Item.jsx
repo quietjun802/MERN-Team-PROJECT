@@ -53,15 +53,12 @@ const Item = ({ bucket, onDelete, onUpdateChecked, onUpdateBucket }) => {
       <input
         type="checkbox"
         checked={checked}
-<<<<<<< HEAD
-        onChange={(e) => onUpdateChecked(e.target.checked)}   // ✅ readOnly 제거
-=======
+
         onChange={(e) => {
           const next = e.target.checked;
           console.log('toggle', id, next);   // 🔎 이벤트 들어오는지 확인
           onUpdateChecked(id, next);         // ✅ (id, next) 형태로 호출
         }}
->>>>>>> choyongjun
       />
 
 
